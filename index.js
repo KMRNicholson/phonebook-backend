@@ -24,8 +24,14 @@ const persons = [
     }
 ]
 
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
+app.get('/info', (request, response) => {
+  const data = {
+    "time": new Date(),
+    "count": persons.length
+  }
+
+  const html = `<p>Phonebook has info for ${data.count} people<br/>${data.time}</p>`
+  response.send(html)
 })
 
 app.get('/api/persons', (request, response) => {
