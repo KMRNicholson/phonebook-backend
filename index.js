@@ -50,7 +50,14 @@ app.post('/api/persons', (request, response) => {
     "number": data.number
   }
 
-  response.json(newPerson)
+  if(!data.name | !data.number) {
+    response.status(400).end()
+  } else if(persons.find(person => person.name === data.name)) {
+    response.status(409).end()
+  } else {
+    persons.push(newPerson)
+    response.json(newPerson)
+  }
 })
 
 app.get('/api/persons/:id', (request, response) => {
