@@ -6,6 +6,7 @@ const app = express()
 morgan.token('body', req => req.method === 'POST' ? JSON.stringify(req.body) : '')
 
 app.use(express.json())
+app.use(express.static('frontend'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(cors())
 
@@ -39,6 +40,11 @@ app.get('/info', (request, response) => {
   }
 
   const html = `<p>Phonebook has info for ${data.count} people<br/>${data.time}</p>`
+  response.send(html)
+})
+
+app.get('/', (request, response) => {
+  const html = `<p>Welcome to the phonebook app. Please see endpoints:<br/>/info<br/>/api/persons</p>`
   response.send(html)
 })
 
