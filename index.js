@@ -36,22 +36,29 @@ app.get('/api/persons', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
   const data = request.body
-  const id = Math.floor(Math.random() * 10000)
-
-  const newPerson = {
-    "id": id,
-    "name": data.name,
-    "number": data.number
-  }
-
   if(!data.name | !data.number) {
     response.status(400).end()
-  } else if(persons.find(person => person.name === data.name)) {
-    response.status(409).end()
-  } else {
-    persons.push(newPerson)
-    response.json(newPerson)
   }
+
+  Person.find({ name: data.name }).then(result => {
+    if(result.length > 0){
+      response.status(409).end()
+    }
+  })
+
+  const person = new Person({
+    name: data.name,
+    number: data.number
+  })
+
+  person.save().then(result => {
+    console.log('person saved!')
+    response.json(person)
+  })
+  .catch(error => {
+    console.log(`failed to save person: ${error}`)
+    response.status(500).end()
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
