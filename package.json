@@ -8,7 +8,8 @@
     "dev": "nodemon index.js",
     "start": "node index.js",
     "build:ui": "pwsh pipeline.ps1",
-    "deploy:full": "pwsh pipeline.ps1 -Deploy"
+    "deploy:full": "pwsh pipeline.ps1 -Deploy",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
   },
   "homepage": "https://github.com/KMRNicholson/phonebook-backend#readme",
   "devDependencies": {
+    "eslint": "^8.48.0",
     "nodemon": "^3.0.1"
   }
 }
