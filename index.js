@@ -17,7 +17,6 @@ app.use(express.json())
 app.use(express.static('frontend'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(cors())
-app.use(errorHandler)
 
 app.get('/info', (request, response) => {
   const data = {
@@ -34,14 +33,14 @@ app.get('/', (request, response) => {
   response.send(html)
 })
 
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (request, response, next) => {
   Person.find({}).then(persons => {
     response.json(persons)
   })
   .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const data = request.body
   if(!data.name | !data.number) {
     response.status(400).end()
@@ -66,22 +65,23 @@ app.post('/api/persons', (request, response) => {
   .catch(error => next(error))
 })
 
-app.get('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const person = persons.find(person => person.id === id)
+app.put('/api/persons/:id', (request, response, next) => {
+  const data = request.body
 
-  if(person){
-    response.json(person)
-  }else{
-    response.status(404).end()
-  }
+  Person.findByIdAndUpdate(request.params.id, { name: data.name, number: data.number }).then(result => {
+    console.log('person updated!')
+    response.status(204).end()
+  })
+  .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (request, response) => Person.findByIdAndRemove(request.params.id)
+app.delete('/api/persons/:id', (request, response, next) => Person.findByIdAndRemove(request.params.id)
   .then(result => {
     response.status(204).end()
   })
   .catch(error => next(error)))
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
