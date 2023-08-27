@@ -1,0 +1,35 @@
+{
+  "name": "phonebook-backend",
+  "version": "0.0.1",
+  "description": "Backend for the phonebook react app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "build:ui": "pwsh pipeline.ps1",
+    "deploy:full": "pwsh pipeline.ps1 -Deploy",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KMRNicholson/phonebook-backend.git"
+  },
+  "author": "Kohdy Nicholson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KMRNicholson/phonebook-backend/issues"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^7.4.4",
+    "morgan": "^1.10.0"
+  },
+  "homepage": "https://github.com/KMRNicholson/phonebook-backend#readme",
+  "devDependencies": {
+    "eslint": "^8.48.0",
+    "nodemon": "^3.0.1"
+  }
+}
