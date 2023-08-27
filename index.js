@@ -8,10 +8,16 @@ const Person = require('./models/Person.js')
 
 morgan.token('body', req => req.method === 'POST' ? JSON.stringify(req.body) : '')
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+  next(error)
+}
+
 app.use(express.json())
 app.use(express.static('frontend'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(cors())
+app.use(errorHandler)
 
 app.get('/info', (request, response) => {
   const data = {
@@ -32,6 +38,7 @@ app.get('/api/persons', (request, response) => {
   Person.find({}).then(persons => {
     response.json(persons)
   })
+  .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response) => {
@@ -45,6 +52,7 @@ app.post('/api/persons', (request, response) => {
       response.status(409).end()
     }
   })
+  .catch(error => next(error))
 
   const person = new Person({
     name: data.name,
@@ -55,10 +63,7 @@ app.post('/api/persons', (request, response) => {
     console.log('person saved!')
     response.json(person)
   })
-  .catch(error => {
-    console.log(`failed to save person: ${error}`)
-    response.status(500).end()
-  })
+  .catch(error => next(error))
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -76,9 +81,7 @@ app.delete('/api/persons/:id', (request, response) => Person.findByIdAndRemove(r
   .then(result => {
     response.status(204).end()
   })
-  .catch(error => {
-    response.status(500).end()
-  }))
+  .catch(error => next(error)))
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
